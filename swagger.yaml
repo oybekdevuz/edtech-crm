@@ -69,6 +69,125 @@ paths:
           description: 'Unauthorized'
         500:
           description: 'Server Error'
+  # ...existing auth paths...
+
+  /api/admins:
+    get:
+      tags:
+      - Admin
+      summary: Get all admins
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/admin'
+              message:
+                type: string
+        401:
+          description: 'Unauthorized'
+        500:
+          description: 'Server Error'
+
+  /api/admins/{id}:
+    get:
+      tags:
+      - Admin
+      summary: Find admin by ID
+      security:
+        - cookieAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Admin ID
+        required: true
+        type: string
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/admin'
+              message:
+                type: string
+        401:
+          description: 'Unauthorized'
+        409:
+          description: 'Admin doesn''t exist'
+        500:
+          description: 'Server Error'
+
+    put:
+      tags:
+      - Admin
+      summary: Update admin by ID
+      security:
+        - cookieAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Admin ID
+        required: true
+        type: integer
+      - name: body
+        in: body
+        description: Admin update data
+        required: true
+        schema:
+          $ref: '#/definitions/admin'
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/admin'
+              message:
+                type: string
+        401:
+          description: 'Unauthorized'
+        409:
+          description: 'Admin doesn''t exist'
+        500:
+          description: 'Server Error'
+
+    delete:
+      tags:
+      - Admin
+      summary: Delete admin by ID
+      security:
+        - cookieAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Admin ID
+        required: true
+        type: integer
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/admin'
+              message:
+                type: string
+        401:
+          description: 'Unauthorized'
+        409:
+          description: 'Admin doesn''t exist'
+        500:
+          description: 'Server Error'
 
   # ... existing admin paths ...
 

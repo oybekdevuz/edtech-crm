@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { IAdmin } from '@/interfaces/admins.interface';
-import { AdminService } from '@services/users.service';
+import { AdminService } from '@/services/admin.service';
 
 export class AdminController {
   public user = Container.get(AdminService);
@@ -22,17 +22,6 @@ export class AdminController {
       const findOneAdminData: IAdmin = await this.user.findAdminById(userId);
 
       res.status(200).json({ data: findOneAdminData, message: 'findOne' });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  public createAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const userData: IAdmin = req.body;
-      const createAdminData: IAdmin = await this.user.createAdmin(userData);
-
-      res.status(201).json({ data: createAdminData, message: 'created' });
     } catch (error) {
       next(error);
     }
