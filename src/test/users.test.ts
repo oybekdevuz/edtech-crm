@@ -3,9 +3,9 @@ import request from 'supertest';
 import { createConnection, getConnection, Repository } from 'typeorm';
 import { App } from '@/app';
 import { dbConnection } from '@database';
-import { CreateUserDto } from '@dtos/users.dto';
-import { UserEntity } from '@entities/users.entity';
-import { UserRoute } from '@routes/users.route';
+import { CreateAdminDto } from '@dtos/users.dto';
+import { AdminEntity } from '@entities/users.entity';
+import { AdminRoute } from '@routes/users.route';
 
 // beforeAll(async () => {
 //   await createConnection(dbConnection);
@@ -15,16 +15,16 @@ afterAll(async () => {
   await getConnection().close();
 });
 
-describe('Testing Users', () => {
+describe('Testing Admins', () => {
   describe('[POST] /users', () => {
     it('response Create user', async () => {
-      const userData: CreateUserDto = {
+      const userData: CreateAdminDto = {
         email: 'test@email.com',
         password: 'q1w2e3r4!',
       };
 
-      const usersRoute = new UserRoute();
-      const userRepository = new Repository<UserEntity>();
+      const usersRoute = new AdminRoute();
+      const userRepository = new Repository<AdminEntity>();
 
       userRepository.findOne = jest.fn().mockReturnValue(null);
       userRepository.save = jest.fn().mockReturnValue({
@@ -40,8 +40,8 @@ describe('Testing Users', () => {
 
   describe('[GET] /users', () => {
     it('response findAll users', async () => {
-      const usersRoute = new UserRoute();
-      const userRepository = new Repository<UserEntity>();
+      const usersRoute = new AdminRoute();
+      const userRepository = new Repository<AdminEntity>();
 
       userRepository.find = jest.fn().mockReturnValue([
         {
@@ -70,8 +70,8 @@ describe('Testing Users', () => {
     it('response findOne user', async () => {
       const userId = 1;
 
-      const usersRoute = new UserRoute();
-      const userRepository = new Repository<UserEntity>();
+      const usersRoute = new AdminRoute();
+      const userRepository = new Repository<AdminEntity>();
 
       userRepository.findOne = jest.fn().mockReturnValue({
         id: userId,
@@ -87,13 +87,13 @@ describe('Testing Users', () => {
   describe('[PUT] /users/:id', () => {
     it('response Update user', async () => {
       const userId = 1;
-      const userData: CreateUserDto = {
+      const userData: CreateAdminDto = {
         email: 'test@email.com',
         password: '1q2w3e4r!',
       };
 
-      const usersRoute = new UserRoute();
-      const userRepository = new Repository<UserEntity>();
+      const usersRoute = new AdminRoute();
+      const userRepository = new Repository<AdminEntity>();
 
       userRepository.findOne = jest.fn().mockReturnValue({
         id: userId,
@@ -120,8 +120,8 @@ describe('Testing Users', () => {
     it('response Delete user', async () => {
       const userId = 1;
 
-      const usersRoute = new UserRoute();
-      const userRepository = new Repository<UserEntity>();
+      const usersRoute = new AdminRoute();
+      const userRepository = new Repository<AdminEntity>();
 
       userRepository.findOne = jest.fn().mockReturnValue({
         id: userId,

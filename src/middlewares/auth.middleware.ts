@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 import { SECRET_KEY } from '@config';
-import { UserEntity } from '@entities/users.entity';
+import { AdminEntity } from '@entities/users.entity';
 import { HttpException } from '@/exceptions/httpException';
-import { DataStoredInToken, RequestWithUser } from '@interfaces/auth.interface';
+import { DataStoredInToken, RequestWithAdmin } from '@interfaces/auth.interface';
 
 const getAuthorization = (req: Request) => {
   const coockie = req.cookies['Authorization'];
@@ -15,16 +15,16 @@ const getAuthorization = (req: Request) => {
   return null;
 };
 
-export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+export const AuthMiddleware = async (req: RequestWithAdmin, res: Response, next: NextFunction) => {
   try {
     const Authorization = getAuthorization(req);
 
     if (Authorization) {
       const { id } = (await verify(Authorization, SECRET_KEY)) as DataStoredInToken;
-      const findUser = await UserEntity.findOne(id, { select: ['id', 'email', 'password'] });
+      const findAdmin = await AdminEntity.findOne(id, { select: ['id', 'username', 'password'] });
 
-      if (findUser) {
-        req.user = findUser;
+      if (findAdmin) {
+        req.user = findAdmin;
         next();
       } else {
         next(new HttpException(401, 'Wrong authentication token'));

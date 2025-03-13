@@ -1,8 +1,8 @@
 import { Request } from 'express';
-import { User } from '@interfaces/users.interface';
+import { Admin } from '@interfaces/users.interface';
 
 export interface DataStoredInToken {
-  id: number;
+  id: string;
 }
 
 export interface TokenData {
@@ -10,6 +10,6 @@ export interface TokenData {
   expiresIn: number;
 }
 
-export interface RequestWithUser extends Request {
-  user: User;
+export interface RequestWithAdmin extends Request {
+  user: Admin;
 }

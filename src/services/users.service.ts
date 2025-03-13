@@ -1,51 +1,51 @@
 import { hash } from 'bcrypt';
 import { EntityRepository, Repository } from 'typeorm';
 import { Service } from 'typedi';
-import { UserEntity } from '@entities/users.entity';
+import { AdminEntity } from '@entities/users.entity';
 import { HttpException } from '@/exceptions/httpException';
-import { User } from '@interfaces/users.interface';
+import { Admin } from '@interfaces/users.interface';
 
 @Service()
 @EntityRepository()
-export class UserService extends Repository<UserEntity> {
-  public async findAllUser(): Promise<User[]> {
-    const users: User[] = await UserEntity.find();
+export class AdminService extends Repository<AdminEntity> {
+  public async findAllAdmin(): Promise<Admin[]> {
+    const users: Admin[] = await AdminEntity.find();
     return users;
   }
 
-  public async findUserById(userId: number): Promise<User> {
-    const findUser: User = await UserEntity.findOne({ where: { id: userId } });
-    if (!findUser) throw new HttpException(409, "User doesn't exist");
+  public async findAdminById(userId: number): Promise<Admin> {
+    const findAdmin: Admin = await AdminEntity.findOne({ where: { id: userId } });
+    if (!findAdmin) throw new HttpException(409, "Admin doesn't exist");
 
-    return findUser;
+    return findAdmin;
   }
 
-  public async createUser(userData: User): Promise<User> {
-    const findUser: User = await UserEntity.findOne({ where: { email: userData.email } });
-    if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
+  public async createAdmin(userData: Admin): Promise<Admin> {
+    const findAdmin: Admin = await AdminEntity.findOne({ where: { username: userData.username } });
+    if (findAdmin) throw new HttpException(409, `This username ${userData.username} already exists`);
 
     const hashedPassword = await hash(userData.password, 10);
-    const createUserData: User = await UserEntity.create({ ...userData, password: hashedPassword }).save();
+    const createAdminData: Admin = await AdminEntity.create({ ...userData, password: hashedPassword }).save();
 
-    return createUserData;
+    return createAdminData;
   }
 
-  public async updateUser(userId: number, userData: User): Promise<User> {
-    const findUser: User = await UserEntity.findOne({ where: { id: userId } });
-    if (!findUser) throw new HttpException(409, "User doesn't exist");
+  public async updateAdmin(userId: number, userData: Admin): Promise<Admin> {
+    const findAdmin: Admin = await AdminEntity.findOne({ where: { id: userId } });
+    if (!findAdmin) throw new HttpException(409, "Admin doesn't exist");
 
     const hashedPassword = await hash(userData.password, 10);
-    await UserEntity.update(userId, { ...userData, password: hashedPassword });
+    await AdminEntity.update(userId, { ...userData, password: hashedPassword });
 
-    const updateUser: User = await UserEntity.findOne({ where: { id: userId } });
-    return updateUser;
+    const updateAdmin: Admin = await AdminEntity.findOne({ where: { id: userId } });
+    return updateAdmin;
   }
 
-  public async deleteUser(userId: number): Promise<User> {
-    const findUser: User = await UserEntity.findOne({ where: { id: userId } });
-    if (!findUser) throw new HttpException(409, "User doesn't exist");
+  public async deleteAdmin(userId: string): Promise<Admin> {
+    const findAdmin: Admin = await AdminEntity.findOne({ where: { id: userId } });
+    if (!findAdmin) throw new HttpException(409, "Admin doesn't exist");
 
-    await UserEntity.delete({ id: userId });
-    return findUser;
+    await AdminEntity.delete({ id: userId });
+    return findAdmin;
   }
 }

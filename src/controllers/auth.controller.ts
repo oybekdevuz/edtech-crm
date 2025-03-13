@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
-import { RequestWithUser } from '@interfaces/auth.interface';
-import { User } from '@interfaces/users.interface';
+import { RequestWithAdmin } from '@interfaces/auth.interface';
+import { Admin } from '@interfaces/users.interface';
 import { AuthService } from '@services/auth.service';
 
 export class AuthController {
@@ -9,10 +9,10 @@ export class AuthController {
 
   public signUp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: User = req.body;
-      const signUpUserData: User = await this.auth.signup(userData);
+      const userData: Admin = req.body;
+      const signUpAdminData: Admin = await this.auth.signup(userData);
 
-      res.status(201).json({ data: signUpUserData, message: 'signup' });
+      res.status(201).json({ data: signUpAdminData, message: 'signup' });
     } catch (error) {
       next(error);
     }
@@ -20,23 +20,23 @@ export class AuthController {
 
   public logIn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: User = req.body;
-      const { cookie, findUser } = await this.auth.login(userData);
+      const userData: Admin = req.body;
+      const { cookie, findAdmin } = await this.auth.login(userData);
 
       res.setHeader('Set-Cookie', [cookie]);
-      res.status(200).json({ data: findUser, message: 'login' });
+      res.status(200).json({ data: findAdmin, message: 'login' });
     } catch (error) {
       next(error);
     }
   };
 
-  public logOut = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  public logOut = async (req: RequestWithAdmin, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: User = req.user;
-      const logOutUserData: User = await this.auth.logout(userData);
+      const userData: Admin = req.user;
+      const logOutAdminData: Admin = await this.auth.logout(userData);
 
       res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
-      res.status(200).json({ data: logOutUserData, message: 'logout' });
+      res.status(200).json({ data: logOutAdminData, message: 'logout' });
     } catch (error) {
       next(error);
     }

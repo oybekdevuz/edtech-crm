@@ -1,23 +1,23 @@
 import { Router } from 'express';
-import { UserController } from '@controllers/users.controller';
-import { CreateUserDto } from '@dtos/users.dto';
+import { AdminController } from '@controllers/users.controller';
+import { CreateAdminDto } from '@dtos/users.dto';
 import { Routes } from '@interfaces/routes.interface';
 import { ValidationMiddleware } from '@middlewares/validation.middleware';
 
-export class UserRoute implements Routes {
+export class AdminRoute implements Routes {
   public path = '/users';
   public router = Router();
-  public user = new UserController();
+  public user = new AdminController();
 
   constructor() {
     this.initializeRoutes();
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}`, this.user.getUsers);
-    this.router.get(`${this.path}/:id(\\d+)`, this.user.getUserById);
-    this.router.post(`${this.path}`, ValidationMiddleware(CreateUserDto), this.user.createUser);
-    this.router.put(`${this.path}/:id(\\d+)`, ValidationMiddleware(CreateUserDto, true), this.user.updateUser);
-    this.router.delete(`${this.path}/:id(\\d+)`, this.user.deleteUser);
+    this.router.get(`${this.path}`, this.user.getAdmins);
+    this.router.get(`${this.path}/:id(\\d+)`, this.user.getAdminById);
+    this.router.post(`${this.path}`, ValidationMiddleware(CreateAdminDto), this.user.createAdmin);
+    this.router.put(`${this.path}/:id(\\d+)`, ValidationMiddleware(CreateAdminDto, true), this.user.updateAdmin);
+    this.router.delete(`${this.path}/:id(\\d+)`, this.user.deleteAdmin);
   }
 }

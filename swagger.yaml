@@ -8,7 +8,7 @@ paths:
     get:
       tags:
       - users
-      summary: Find All Users
+      summary: Find All Admins
       responses:
         200:
           description: 'OK'
@@ -19,7 +19,7 @@ paths:
     post:
       tags:
       - users
-      summary: Add User
+      summary: Add Admin
       parameters:
       - name: body
         in: body
@@ -42,11 +42,11 @@ paths:
     get:
       tags:
       - users
-      summary: Find User By Id
+      summary: Find Admin By Id
       parameters:
       - name: id
         in: path
-        description: User Id
+        description: Admin Id
         required: true
         type: integer
       responses:
@@ -61,7 +61,7 @@ paths:
     put:
       tags:
       - users
-      summary: Update User By Id
+      summary: Update Admin By Id
       parameters:
       - name: id
         in: path
@@ -88,7 +88,7 @@ paths:
     delete:
       tags:
       - users
-      summary: Delete User By Id
+      summary: Delete Admin By Id
       parameters:
       - name: id
         in: path
@@ -108,12 +108,12 @@ definitions:
   users:
     type: object
     required:
-        - email
+        - username
         - password
     properties:
-      email:
+      username:
         type: string
-        description: user Email
+        description: user username
       password:
         type: string
         description: user Password

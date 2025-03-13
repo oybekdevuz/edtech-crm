@@ -3,12 +3,12 @@ import { sign } from 'jsonwebtoken';
 import { Service } from 'typedi';
 import { EntityRepository, Repository } from 'typeorm';
 import { SECRET_KEY } from '@config';
-import { UserEntity } from '@entities/users.entity';
+import { AdminEntity } from '@entities/users.entity';
 import { HttpException } from '@/exceptions/httpException';
 import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
-import { User } from '@interfaces/users.interface';
+import { Admin } from '@interfaces/users.interface';
 
-const createToken = (user: User): TokenData => {
+const createToken = (user: Admin): TokenData => {
   const dataStoredInToken: DataStoredInToken = { id: user.id };
   const secretKey: string = SECRET_KEY;
   const expiresIn: number = 60 * 60;
@@ -22,33 +22,33 @@ const createCookie = (tokenData: TokenData): string => {
 
 @Service()
 @EntityRepository()
-export class AuthService extends Repository<UserEntity> {
-  public async signup(userData: User): Promise<User> {
-    const findUser: User = await UserEntity.findOne({ where: { email: userData.email } });
-    if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
+export class AuthService extends Repository<AdminEntity> {
+  public async signup(userData: Admin): Promise<Admin> {
+    const findAdmin: Admin = await AdminEntity.findOne({ where: { username: userData.username } });
+    if (findAdmin) throw new HttpException(409, `This username ${userData.username} already exists`);
 
     const hashedPassword = await hash(userData.password, 10);
-    const createUserData: User = await UserEntity.create({ ...userData, password: hashedPassword }).save();
-    return createUserData;
+    const createAdminData: Admin = await AdminEntity.create({ ...userData, password: hashedPassword }).save();
+    return createAdminData;
   }
 
-  public async login(userData: User): Promise<{ cookie: string; findUser: User }> {
-    const findUser: User = await UserEntity.findOne({ where: { email: userData.email } });
-    if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
+  public async login(userData: Admin): Promise<{ cookie: string; findAdmin: Admin }> {
+    const findAdmin: Admin = await AdminEntity.findOne({ where: { username: userData.username } });
+    if (!findAdmin) throw new HttpException(409, `This username ${userData.username} was not found`);
 
-    const isPasswordMatching: boolean = await compare(userData.password, findUser.password);
+    const isPasswordMatching: boolean = await compare(userData.password, findAdmin.password);
     if (!isPasswordMatching) throw new HttpException(409, `Password not matching`);
 
-    const tokenData = createToken(findUser);
+    const tokenData = createToken(findAdmin);
     const cookie = createCookie(tokenData);
 
-    return { cookie, findUser };
+    return { cookie, findAdmin };
   }
 
-  public async logout(userData: User): Promise<User> {
-    const findUser: User = await UserEntity.findOne({ where: { email: userData.email, password: userData.password } });
-    if (!findUser) throw new HttpException(409, "User doesn't exist");
+  public async logout(userData: Admin): Promise<Admin> {
+    const findAdmin: Admin = await AdminEntity.findOne({ where: { username: userData.username, password: userData.password } });
+    if (!findAdmin) throw new HttpException(409, "Admin doesn't exist");
 
-    return findUser;
+    return findAdmin;
   }
 }

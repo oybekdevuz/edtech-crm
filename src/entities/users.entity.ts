@@ -1,14 +1,13 @@
 import { IsNotEmpty } from 'class-validator';
 import { Entity, Column, Unique, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { User } from '@interfaces/users.interface';
+import { Admin } from '@interfaces/users.interface';
 import { BasePgEntity } from '../common/BaseEntity';
 
 @Entity()
-export class UserEntity extends BasePgEntity implements User {
+export class AdminEntity extends BasePgEntity implements Admin {
   @Column()
   @IsNotEmpty()
-  @Unique(['email'])
-  email: string;
+  username: string;
 
   @Column()
   @IsNotEmpty()

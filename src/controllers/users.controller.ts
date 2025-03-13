@@ -1,61 +1,61 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
-import { User } from '@interfaces/users.interface';
-import { UserService } from '@services/users.service';
+import { Admin } from '@interfaces/users.interface';
+import { AdminService } from '@services/users.service';
 
-export class UserController {
-  public user = Container.get(UserService);
+export class AdminController {
+  public user = Container.get(AdminService);
 
-  public getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public getAdmins = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const findAllUsersData: User[] = await this.user.findAllUser();
+      const findAllAdminsData: Admin[] = await this.user.findAllAdmin();
 
-      res.status(200).json({ data: findAllUsersData, message: 'findAll' });
+      res.status(200).json({ data: findAllAdminsData, message: 'findAll' });
     } catch (error) {
       next(error);
     }
   };
 
-  public getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public getAdminById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = Number(req.params.id);
-      const findOneUserData: User = await this.user.findUserById(userId);
+      const findOneAdminData: Admin = await this.user.findAdminById(userId);
 
-      res.status(200).json({ data: findOneUserData, message: 'findOne' });
+      res.status(200).json({ data: findOneAdminData, message: 'findOne' });
     } catch (error) {
       next(error);
     }
   };
 
-  public createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public createAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: User = req.body;
-      const createUserData: User = await this.user.createUser(userData);
+      const userData: Admin = req.body;
+      const createAdminData: Admin = await this.user.createAdmin(userData);
 
-      res.status(201).json({ data: createUserData, message: 'created' });
+      res.status(201).json({ data: createAdminData, message: 'created' });
     } catch (error) {
       next(error);
     }
   };
 
-  public updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const userId = Number(req.params.id);
-      const userData: User = req.body;
-      const updateUserData: User = await this.user.updateUser(userId, userData);
-
-      res.status(200).json({ data: updateUserData, message: 'updated' });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  public deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public updateAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = Number(req.params.id);
-      const deleteUserData: User = await this.user.deleteUser(userId);
+      const userData: Admin = req.body;
+      const updateAdminData: Admin = await this.user.updateAdmin(userId, userData);
 
-      res.status(200).json({ data: deleteUserData, message: 'deleted' });
+      res.status(200).json({ data: updateAdminData, message: 'updated' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deleteAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const userId = Number(req.params.id);
+      const deleteAdminData: Admin = await this.user.deleteAdmin(userId);
+
+      res.status(200).json({ data: deleteAdminData, message: 'deleted' });
     } catch (error) {
       next(error);
     }
