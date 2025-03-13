@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { AdminController } from '@controllers/users.controller';
-import { CreateAdminDto } from '@dtos/users.dto';
+import { CreateAdminDto } from '@/dtos/admins.dto';
 import { Routes } from '@interfaces/routes.interface';
 import { ValidationMiddleware } from '@middlewares/validation.middleware';
 
 export class AdminRoute implements Routes {
-  public path = '/users';
+  public path = '/admins';
   public router = Router();
   public user = new AdminController();
 

@@ -24,7 +24,7 @@ export class App {
     this.env = NODE_ENV || 'development';
     this.port = PORT || 3000;
 
-    this.connectToDatabase();
+    // this.connectToDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
     this.initializeSwagger();
@@ -58,7 +58,7 @@ export class App {
 
   private initializeRoutes(routes: Routes[]) {
     routes.forEach(route => {
-      this.app.use('/', route.router);
+      this.app.use('/api', route.router);
     });
   }
 

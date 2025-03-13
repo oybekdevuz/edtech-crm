@@ -1,6 +1,6 @@
 import { App } from '@/app';
 import { AuthRoute } from '@routes/auth.route';
-import { AdminRoute } from '@routes/users.route';
+import { AdminRoute } from '@/routes/admin.route';
 import { ValidateEnv } from '@utils/validateEnv';
 
 ValidateEnv();

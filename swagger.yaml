@@ -19,7 +19,7 @@ paths:
     post:
       tags:
       - users
-      summary: Add Admin
+      summary: Add IAdmin
       parameters:
       - name: body
         in: body
@@ -42,11 +42,11 @@ paths:
     get:
       tags:
       - users
-      summary: Find Admin By Id
+      summary: Find IAdmin By Id
       parameters:
       - name: id
         in: path
-        description: Admin Id
+        description: IAdmin Id
         required: true
         type: integer
       responses:
@@ -61,7 +61,7 @@ paths:
     put:
       tags:
       - users
-      summary: Update Admin By Id
+      summary: Update IAdmin By Id
       parameters:
       - name: id
         in: path
@@ -88,7 +88,7 @@ paths:
     delete:
       tags:
       - users
-      summary: Delete Admin By Id
+      summary: Delete IAdmin By Id
       parameters:
       - name: id
         in: path

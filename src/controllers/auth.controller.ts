@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { RequestWithAdmin } from '@interfaces/auth.interface';
-import { Admin } from '@interfaces/users.interface';
+import { IAdmin } from '@/interfaces/admins.interface';
 import { AuthService } from '@services/auth.service';
 
 export class AuthController {
@@ -9,8 +9,8 @@ export class AuthController {
 
   public signUp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: Admin = req.body;
-      const signUpAdminData: Admin = await this.auth.signup(userData);
+      const userData: IAdmin = req.body;
+      const signUpAdminData: IAdmin = await this.auth.signup(userData);
 
       res.status(201).json({ data: signUpAdminData, message: 'signup' });
     } catch (error) {
@@ -20,7 +20,7 @@ export class AuthController {
 
   public logIn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: Admin = req.body;
+      const userData: IAdmin = req.body;
       const { cookie, findAdmin } = await this.auth.login(userData);
 
       res.setHeader('Set-Cookie', [cookie]);
@@ -32,8 +32,8 @@ export class AuthController {
 
   public logOut = async (req: RequestWithAdmin, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: Admin = req.user;
-      const logOutAdminData: Admin = await this.auth.logout(userData);
+      const userData: IAdmin = req.user;
+      const logOutAdminData: IAdmin = await this.auth.logout(userData);
 
       res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
       res.status(200).json({ data: logOutAdminData, message: 'logout' });

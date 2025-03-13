@@ -3,7 +3,7 @@ import request from 'supertest';
 import { createConnection, getConnection, Repository } from 'typeorm';
 import { App } from '@/app';
 import { dbConnection } from '@database';
-import { CreateAdminDto } from '@dtos/users.dto';
+import { CreateAdminDto } from '@/dtos/admins.dto';
 import { AdminEntity } from '@/entities/admins.entity';
 import { AuthRoute } from '@routes/auth.route';
 

@@ -6,9 +6,9 @@ import { SECRET_KEY } from '@config';
 import { AdminEntity } from '@/entities/admins.entity';
 import { HttpException } from '@/exceptions/httpException';
 import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
-import { Admin } from '@interfaces/users.interface';
+import { IAdmin } from '@/interfaces/admins.interface';
 
-const createToken = (user: Admin): TokenData => {
+const createToken = (user: IAdmin): TokenData => {
   const dataStoredInToken: DataStoredInToken = { id: user.id };
   const secretKey: string = SECRET_KEY;
   const expiresIn: number = 60 * 60;
@@ -23,17 +23,17 @@ const createCookie = (tokenData: TokenData): string => {
 @Service()
 @EntityRepository()
 export class AuthService extends Repository<AdminEntity> {
-  public async signup(userData: Admin): Promise<Admin> {
-    const findAdmin: Admin = await AdminEntity.findOne({ where: { username: userData.username } });
+  public async signup(userData: IAdmin): Promise<IAdmin> {
+    const findAdmin: IAdmin = await AdminEntity.findOne({ where: { username: userData.username } });
     if (findAdmin) throw new HttpException(409, `This username ${userData.username} already exists`);
 
     const hashedPassword = await hash(userData.password, 10);
-    const createAdminData: Admin = await AdminEntity.create({ ...userData, password: hashedPassword }).save();
+    const createAdminData: IAdmin = await AdminEntity.create({ ...userData, password: hashedPassword }).save();
     return createAdminData;
   }
 
-  public async login(userData: Admin): Promise<{ cookie: string; findAdmin: Admin }> {
-    const findAdmin: Admin = await AdminEntity.findOne({ where: { username: userData.username } });
+  public async login(userData: IAdmin): Promise<{ cookie: string; findAdmin: IAdmin }> {
+    const findAdmin: IAdmin = await AdminEntity.findOne({ where: { username: userData.username } });
     if (!findAdmin) throw new HttpException(409, `This username ${userData.username} was not found`);
 
     const isPasswordMatching: boolean = await compare(userData.password, findAdmin.password);
@@ -45,9 +45,9 @@ export class AuthService extends Repository<AdminEntity> {
     return { cookie, findAdmin };
   }
 
-  public async logout(userData: Admin): Promise<Admin> {
-    const findAdmin: Admin = await AdminEntity.findOne({ where: { username: userData.username, password: userData.password } });
-    if (!findAdmin) throw new HttpException(409, "Admin doesn't exist");
+  public async logout(userData: IAdmin): Promise<IAdmin> {
+    const findAdmin: IAdmin = await AdminEntity.findOne({ where: { username: userData.username, password: userData.password } });
+    if (!findAdmin) throw new HttpException(409, "IAdmin doesn't exist");
 
     return findAdmin;
   }
