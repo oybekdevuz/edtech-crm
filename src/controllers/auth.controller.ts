@@ -7,7 +7,7 @@ import { AuthService } from '@services/auth.service';
 export class AuthController {
   public auth = Container.get(AuthService);
 
-  public signUp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public signUpAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userData: IAdmin = req.body;
       const signUpAdminData: IAdmin = await this.auth.signup(userData);
@@ -18,25 +18,25 @@ export class AuthController {
     }
   };
 
-  public logIn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public logInAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userData: IAdmin = req.body;
-      const { cookie, findAdmin } = await this.auth.login(userData);
+      const { cookie, findAdmin, tokens } = await this.auth.login(userData);
 
       res.setHeader('Set-Cookie', [cookie]);
-      res.status(200).json({ data: findAdmin, message: 'login' });
+      res.status(200).json({ data: { admin: findAdmin, tokens }, message: 'login' });
     } catch (error) {
       next(error);
     }
   };
 
-  public logOut = async (req: RequestWithAdmin, res: Response, next: NextFunction): Promise<void> => {
+  public logOutAdmin = async (req: RequestWithAdmin, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userData: IAdmin = req.user;
-      const logOutAdminData: IAdmin = await this.auth.logout(userData);
+      await this.auth.logout(userData);
 
       res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
-      res.status(200).json({ data: logOutAdminData, message: 'logout' });
+      res.status(200).json({ data: {}, message: 'logout' });
     } catch (error) {
       next(error);
     }

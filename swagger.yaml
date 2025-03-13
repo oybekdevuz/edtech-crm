@@ -1,111 +1,85 @@
 tags:
-- name: users
-  description: users API
+- name: Auth
+  description: API Auth for admin
+- name: auth
+  description: authentication & authorization
 
 paths:
-# [GET] users
-  /users:
-    get:
-      tags:
-      - users
-      summary: Find All Admins
-      responses:
-        200:
-          description: 'OK'
-        500:
-          description: 'Server Error'
-
-# [POST] users
+  /api/signup:
     post:
       tags:
-      - users
-      summary: Add IAdmin
+      - auth
+      summary: Register new admin
+      security:
+        - cookieAuth: []
       parameters:
       - name: body
         in: body
-        description: user Data
+        description: Admin registration data
         required: true
         schema:
-          $ref: '#/definitions/users'
+          $ref: '#/definitions/admin'
       responses:
         201:
           description: 'Created'
         400:
           description: 'Bad Request'
         409:
-          description: 'Conflict'
+          description: 'Conflict - Username already exists'
         500:
           description: 'Server Error'
 
-# [GET] users/id
-  /users/{id}:
-    get:
+  /api/login:
+    post:
       tags:
-      - users
-      summary: Find IAdmin By Id
+      - auth
+      summary: Login admin
       parameters:
-      - name: id
-        in: path
-        description: IAdmin Id
-        required: true
-        type: integer
-      responses:
-        200:
-          description: 'OK'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
-
-# [PUT] users/id
-    put:
-      tags:
-      - users
-      summary: Update IAdmin By Id
-      parameters:
-      - name: id
-        in: path
-        description: user Id
-        required: true
-        type: integer
       - name: body
         in: body
-        description: user Data
+        description: Admin login credentials
         required: true
         schema:
-          $ref: '#/definitions/users'
+          $ref: '#/definitions/admin'
       responses:
         200:
           description: 'OK'
+          headers:
+            Set-Cookie:
+              type: string
+              description: 'Authorization token'
         400:
           description: 'Bad Request'
         409:
-          description: 'Conflict'
+          description: 'Conflict - Invalid credentials'
         500:
           description: 'Server Error'
 
-# [DELETE] users/id
-    delete:
+  /api/logout:
+    post:
       tags:
-      - users
-      summary: Delete IAdmin By Id
-      parameters:
-      - name: id
-        in: path
-        description: user Id
-        required: true
-        type: integer
+      - auth
+      summary: Logout admin
+      security:
+        - cookieAuth: []
       responses:
         200:
           description: 'OK'
-        409:
-          description: 'Conflict'
+        401:
+          description: 'Unauthorized'
         500:
           description: 'Server Error'
 
-# definitions
+  # ... existing admin paths ...
+
+securityDefinitions:
+  cookieAuth:
+    type: apiKey
+    in: cookie
+    name: Authorization
+
 definitions:
-  users:
+  admin:
     type: object
     required:
         - username
@@ -116,7 +90,8 @@ definitions:
         description: user username
       password:
         type: string
-        description: user Password
+        description: user password
+        format: password
 
 schemes:
  - https

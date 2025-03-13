@@ -17,5 +17,5 @@ export class UpdateAdminDto {
   @IsNotEmpty()
   @MinLength(9)
   @MaxLength(32)
-  public password: string;
+  public password?: string;
 }

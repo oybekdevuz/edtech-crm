@@ -1,53 +1,45 @@
 import { compare, hash } from 'bcrypt';
-import { sign } from 'jsonwebtoken';
 import { Service } from 'typedi';
 import { EntityRepository, Repository } from 'typeorm';
-import { SECRET_KEY } from '@config';
 import { AdminEntity } from '@/entities/admins.entity';
 import { HttpException } from '@/exceptions/httpException';
-import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
+import { ITokens, TokenData } from '@interfaces/auth.interface';
 import { IAdmin } from '@/interfaces/admins.interface';
-
-const createToken = (user: IAdmin): TokenData => {
-  const dataStoredInToken: DataStoredInToken = { id: user.id };
-  const secretKey: string = SECRET_KEY;
-  const expiresIn: number = 60 * 60;
-
-  return { expiresIn, token: sign(dataStoredInToken, secretKey, { expiresIn }) };
-};
+import { JwtService } from '@/utils/jwt-token';
+import { ACCESS_SECRET_TIME } from '@/config';
 
 const createCookie = (tokenData: TokenData): string => {
-  return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
+  return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${ACCESS_SECRET_TIME};`;
 };
 
 @Service()
 @EntityRepository()
 export class AuthService extends Repository<AdminEntity> {
-  public async signup(userData: IAdmin): Promise<IAdmin> {
-    const findAdmin: IAdmin = await AdminEntity.findOne({ where: { username: userData.username } });
-    if (findAdmin) throw new HttpException(409, `This username ${userData.username} already exists`);
+  public async signup(dto: IAdmin): Promise<IAdmin> {
+    const findAdmin: IAdmin = await AdminEntity.findOne({ where: { username: dto.username } });
+    if (findAdmin) throw new HttpException(409, `This username ${dto.username} already exists`);
 
-    const hashedPassword = await hash(userData.password, 10);
-    const createAdminData: IAdmin = await AdminEntity.create({ ...userData, password: hashedPassword }).save();
+    const hashedPassword = await hash(dto.password, 10);
+    const createAdminData: IAdmin = await AdminEntity.create({ ...dto, password: hashedPassword }).save();
     return createAdminData;
   }
 
-  public async login(userData: IAdmin): Promise<{ cookie: string; findAdmin: IAdmin }> {
-    const findAdmin: IAdmin = await AdminEntity.findOne({ where: { username: userData.username } });
-    if (!findAdmin) throw new HttpException(409, `This username ${userData.username} was not found`);
+  public async login(dto: IAdmin): Promise<{ cookie: string; findAdmin: IAdmin; tokens: ITokens }> {
+    const findAdmin: IAdmin = await AdminEntity.findOne({ where: { username: dto.username } });
+    if (!findAdmin) throw new HttpException(409, `This username ${dto.username} was not found`);
 
-    const isPasswordMatching: boolean = await compare(userData.password, findAdmin.password);
+    const isPasswordMatching: boolean = await compare(dto.password, findAdmin.password);
     if (!isPasswordMatching) throw new HttpException(409, `Password not matching`);
+    const jwtService = new JwtService();
+    const tokenData = jwtService.createToken({ id: findAdmin.id, username: findAdmin.username });
+    const cookie = createCookie({ token: tokenData.access_token });
 
-    const tokenData = createToken(findAdmin);
-    const cookie = createCookie(tokenData);
-
-    return { cookie, findAdmin };
+    return { cookie, findAdmin, tokens: tokenData };
   }
 
-  public async logout(userData: IAdmin): Promise<IAdmin> {
-    const findAdmin: IAdmin = await AdminEntity.findOne({ where: { username: userData.username, password: userData.password } });
-    if (!findAdmin) throw new HttpException(409, "IAdmin doesn't exist");
+  public async logout(dto: IAdmin): Promise<IAdmin> {
+    const findAdmin: IAdmin = await AdminEntity.findOne({ where: { username: dto.username, password: dto.password } });
+    if (!findAdmin) throw new HttpException(409, "Admin doesn't exist");
 
     return findAdmin;
   }
