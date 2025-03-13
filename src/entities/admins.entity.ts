@@ -3,7 +3,7 @@ import { Entity, Column, Unique, CreateDateColumn, UpdateDateColumn } from 'type
 import { Admin } from '@interfaces/users.interface';
 import { BasePgEntity } from '../common/BaseEntity';
 
-@Entity()
+@Entity('admins')
 export class AdminEntity extends BasePgEntity implements Admin {
   @Column()
   @IsNotEmpty()

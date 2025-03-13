@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 import { SECRET_KEY } from '@config';
-import { AdminEntity } from '@entities/users.entity';
+import { AdminEntity } from '@/entities/admins.entity';
 import { HttpException } from '@/exceptions/httpException';
 import { DataStoredInToken, RequestWithAdmin } from '@interfaces/auth.interface';
 

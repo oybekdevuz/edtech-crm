@@ -1,7 +1,7 @@
 import { hash } from 'bcrypt';
 import { EntityRepository, Repository } from 'typeorm';
 import { Service } from 'typedi';
-import { AdminEntity } from '@entities/users.entity';
+import { AdminEntity } from '@/entities/admins.entity';
 import { HttpException } from '@/exceptions/httpException';
 import { Admin } from '@interfaces/users.interface';
 

@@ -4,7 +4,7 @@ import { createConnection, getConnection, Repository } from 'typeorm';
 import { App } from '@/app';
 import { dbConnection } from '@database';
 import { CreateAdminDto } from '@dtos/users.dto';
-import { AdminEntity } from '@entities/users.entity';
+import { AdminEntity } from '@/entities/admins.entity';
 import { AdminRoute } from '@routes/users.route';
 
 // beforeAll(async () => {
