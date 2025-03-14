@@ -1,6 +1,7 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { BasePgEntity } from '../common/BaseEntity';
 import { ICourses } from '../interfaces/courses.interface';
+import { StudentCourseEntity } from './studentCourses.entity';
 
 @Entity('courses')
 export class CourseEntity extends BasePgEntity implements ICourses {
@@ -18,4 +19,7 @@ export class CourseEntity extends BasePgEntity implements ICourses {
 
   @Column({ type: 'text', array: true, nullable: false })
   public weeks: string[];
+
+  @OneToMany(() => StudentCourseEntity, studentCourse => studentCourse.course)
+  public studentCourses: StudentCourseEntity[];
 }

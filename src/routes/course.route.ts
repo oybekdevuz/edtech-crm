@@ -4,6 +4,7 @@ import { ValidationMiddleware } from '@middlewares/validation.middleware';
 import { AuthMiddleware } from '@/middlewares/auth.middleware';
 import { CourseController } from '../controllers/course.controller';
 import { CreateCourseDto } from '../dtos/course.dto';
+import { EnrollStudentDto } from '@/dtos/enroll-student.dto';
 
 export class CourseRoute implements Routes {
   public path = '/courses';
@@ -16,6 +17,7 @@ export class CourseRoute implements Routes {
 
   private initializeRoutes() {
     this.router.post(`${this.path}`, AuthMiddleware, ValidationMiddleware(CreateCourseDto), this.controller.create);
+    this.router.post(`${this.path}/enroll-student`, AuthMiddleware, ValidationMiddleware(EnrollStudentDto), this.controller.enrollStudent);
     this.router.get(`${this.path}`, AuthMiddleware, this.controller.get);
     this.router.get(`${this.path}/:id`, AuthMiddleware, this.controller.getById);
     this.router.put(`${this.path}/:id`, AuthMiddleware, ValidationMiddleware(CreateCourseDto, true), this.controller.update);

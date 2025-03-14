@@ -1,6 +1,7 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { BasePgEntity } from '../common/BaseEntity';
 import { Istudent } from '@/interfaces/students.interface';
+import { StudentCourseEntity } from './studentCourses.entity';
 
 @Entity('students')
 export class StudentEntity extends BasePgEntity implements Istudent {
@@ -12,4 +13,7 @@ export class StudentEntity extends BasePgEntity implements Istudent {
 
   @Column({ type: 'varchar' })
   phone_number: string;
+
+  @OneToMany(() => StudentCourseEntity, studentCourse => studentCourse.student)
+  public studentCourses: StudentCourseEntity[];
 }

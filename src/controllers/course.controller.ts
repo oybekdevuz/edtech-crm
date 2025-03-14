@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { CourseService } from '../services/course.service';
 import { ICourses } from '../interfaces/courses.interface';
+import { EnrollStudentDto } from '@/dtos/enroll-student.dto';
+import { StudentCourseEntity } from '@/entities/studentCourses.entity';
 
 export class CourseController {
   public user = Container.get(CourseService);
@@ -42,6 +44,17 @@ export class CourseController {
     try {
       const dto: ICourses = req.body;
       const updateCourseData: ICourses = await this.user.createData(dto);
+
+      res.status(200).json({ data: updateCourseData, message: 'success' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public enrollStudent = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const dto: EnrollStudentDto = req.body;
+      const updateCourseData: StudentCourseEntity = await this.user.enrollStudent(dto);
 
       res.status(200).json({ data: updateCourseData, message: 'success' });
     } catch (error) {

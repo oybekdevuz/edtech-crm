@@ -8,12 +8,15 @@ import { StudentEntity } from '../entities/students.entity';
 @EntityRepository()
 export class StudentService extends Repository<StudentEntity> {
   public async findAll(): Promise<Istudent[]> {
-    const users: Istudent[] = await StudentEntity.find();
-    return users;
+    const students: Istudent[] = await StudentEntity.find();
+    return students;
   }
 
-  public async findById(userId: string): Promise<Istudent> {
-    const findStudent: Istudent = await StudentEntity.findOne({ where: { id: userId } });
+  public async findById(userId: string): Promise<StudentEntity> {
+    const findStudent: StudentEntity = await StudentEntity.findOne({
+      where: { id: userId },
+      relations: ['studentCourses', 'studentCourses.course'],
+    });
     if (!findStudent) throw new HttpException(409, "Student doesn't exist");
 
     return findStudent;

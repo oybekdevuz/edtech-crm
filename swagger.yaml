@@ -416,6 +416,37 @@ paths:
           description: 'Unauthorized'
         500:
           description: 'Server Error'
+  /api/courses/enroll-student:
+    post:
+      tags:
+      - Courses
+      summary: Register new student to course
+      security:
+        - cookieAuth: []
+      parameters:
+      - name: body
+        in: body
+        description: Enroll student data
+        required: true
+        schema:
+          $ref: '#/definitions/EnrollStudent'
+      responses:
+        201:
+          description: 'Course created successfully'
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/ResEnrollStudent'
+              message:
+                type: string
+                example: "success"
+        400:
+          description: 'Bad Request - Invalid input'
+        401:
+          description: 'Unauthorized'
+        500:
+          description: 'Server Error'
 
   /api/courses/{id}:
     get:
@@ -643,6 +674,117 @@ definitions:
           type: string
           enum: [mon, tue, wed, thu, fri, sat, sun]
         example: ["mon", "fri", "wed", "thu", "fri", "sat", "sun"]
+
+  EnrollStudent:
+    type: object
+    required:
+      - course_id
+      - student_id
+    properties:
+      course_id:
+        type: string
+        example: "123e4567-e89b-12d3-a456-426614174000"
+      student_id:
+        type: string
+        example: "123e4567-e89b-12d3-a456-426614174000"
+  ResEnrollStudent:
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          student:
+            type: object
+            properties:
+              id:
+                type: string
+                example: "febcfabe-0cc4-4210-b0ba-d56b8a91d763"
+              is_active:
+                type: boolean
+                example: true
+              is_deleted:
+                type: boolean
+                example: false
+              created_at:
+                type: string
+                example: "1741951208310"
+              updated_at:
+                type: string
+                example: "1741951141005"
+              deleted_at:
+                type: string
+                nullable: true
+                example: null
+              first_name:
+                type: string
+                example: "John"
+              last_name:
+                type: string
+                example: "Doe"
+              phone_number:
+                type: string
+                example: "+998901234567"
+          course:
+            type: object
+            properties:
+              id:
+                type: string
+                example: "02d06d3a-3c3c-4bd4-8f40-38f79b58e7b2"
+              is_active:
+                type: boolean
+                example: true
+              is_deleted:
+                type: boolean
+                example: false
+              created_at:
+                type: string
+                example: "1741951250498"
+              updated_at:
+                type: string
+                example: "1741951141005"
+              deleted_at:
+                type: string
+                nullable: true
+                example: null
+              course_name:
+                type: string
+                example: "Advanced JavaScript"
+              teacher_name:
+                type: string
+                example: "John Smith"
+              start_time:
+                type: string
+                example: "1741919375491"
+              start_hour:
+                type: string
+                example: "14:00"
+              weeks:
+                type: array
+                items:
+                  type: string
+                example: ["mon", "fri", "wed", "thu", "fri", "sat", "sun"]
+          deleted_at:
+            type: string
+            nullable: true
+            example: null
+          id:
+            type: string
+            example: "e30accaf-a174-4e9f-a68c-8c85232f304a"
+          is_active:
+            type: boolean
+            example: true
+          is_deleted:
+            type: boolean
+            example: false
+          created_at:
+            type: string
+            example: "1741951267301"
+          updated_at:
+            type: string
+            example: "1741951141005"
+      message:
+        type: string
+        example: "success"
 
 
 
