@@ -1,14 +1,16 @@
 tags:
 - name: Auth
   description: API Auth for admin
-- name: auth
-  description: authentication & authorization
+- name: Admin
+  description: Admin CRUD
+- name: Students
+  description: Students CRUD
 
 paths:
   /api/signup:
     post:
       tags:
-      - auth
+      - Auth
       summary: Register new admin
       security:
         - cookieAuth: []
@@ -32,7 +34,7 @@ paths:
   /api/login:
     post:
       tags:
-      - auth
+      - Auth
       summary: Login admin
       parameters:
       - name: body
@@ -58,7 +60,7 @@ paths:
   /api/logout:
     post:
       tags:
-      - auth
+      - Auth
       summary: Logout admin
       security:
         - cookieAuth: []
@@ -72,7 +74,7 @@ paths:
   /api/refresh-token:
     post:
       tags:
-      - auth
+      - Auth
       summary: refresh Admin token
       security:
         - cookieAuth: []
@@ -202,7 +204,165 @@ paths:
         500:
           description: 'Server Error'
 
-  # ... existing admin paths ...
+  /api/students:
+    get:
+      tags:
+      - Students
+      summary: Get all students
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: 'Successfully retrieved students'
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Student'
+              message:
+                type: string
+                example: "findAll"
+        401:
+          description: 'Unauthorized'
+        500:
+          description: 'Server Error'
+
+    post:
+      tags:
+      - Students
+      summary: Create new student
+      security:
+        - cookieAuth: []
+      parameters:
+      - name: body
+        in: body
+        description: Student creation data
+        required: true
+        schema:
+          $ref: '#/definitions/CreateStudent'
+      responses:
+        201:
+          description: 'Student created successfully'
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Student'
+              message:
+                type: string
+                example: "created"
+        400:
+          description: 'Bad Request - Invalid input'
+        401:
+          description: 'Unauthorized'
+        409:
+          description: 'Conflict - Phone number already exists'
+        500:
+          description: 'Server Error'
+
+  /api/students/{id}:
+    get:
+      tags:
+      - Students
+      summary: Get student by ID
+      security:
+        - cookieAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Student ID
+        required: true
+        type: string
+      responses:
+        200:
+          description: 'Successfully retrieved student'
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Student'
+              message:
+                type: string
+                example: "findOne"
+        401:
+          description: 'Unauthorized'
+        404:
+          description: 'Student not found'
+        500:
+          description: 'Server Error'
+
+    put:
+      tags:
+      - Students
+      summary: Update student by ID
+      security:
+        - cookieAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Student ID
+        required: true
+        type: string
+      - name: body
+        in: body
+        description: Student update data
+        required: true
+        schema:
+          $ref: '#/definitions/CreateStudent'
+      responses:
+        200:
+          description: 'Student updated successfully'
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Student'
+              message:
+                type: string
+                example: "updated"
+        400:
+          description: 'Bad Request - Invalid input'
+        401:
+          description: 'Unauthorized'
+        404:
+          description: 'Student not found'
+        500:
+          description: 'Server Error'
+
+    delete:
+      tags:
+      - Students
+      summary: Delete student by ID
+      security:
+        - cookieAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Student ID
+        required: true
+        type: string
+      responses:
+        200:
+          description: 'Student deleted successfully'
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Student'
+              message:
+                type: string
+                example: "deleted"
+        401:
+          description: 'Unauthorized'
+        404:
+          description: 'Student not found'
+        500:
+          description: 'Server Error'
+
+
+
 
 securityDefinitions:
   cookieAuth:
@@ -219,11 +379,54 @@ definitions:
     properties:
       username:
         type: string
+        example: "Admin@123"
         description: user username
       password:
         type: string
+        example: "Admin@123"
         description: user password
         format: password
+  Student:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "123e4567-e89b-12d3-a456-426614174000"
+      first_name:
+        type: string
+        example: "John"
+      last_name:
+        type: string
+        example: "Doe"
+      phone_number:
+        type: string
+        example: "+998901234567"
+      created_at:
+        type: integer
+        example: 1741919375491
+        description: "Timestamp in milliseconds since epoch"
+      updated_at:
+        type: integer
+        example: 1741919375491
+        description: "Timestamp in milliseconds since epoch"
+
+  CreateStudent:
+    type: object
+    required:
+      - first_name
+      - last_name
+      - phone_number
+    properties:
+      first_name:
+        type: string
+        example: "John"
+      last_name:
+        type: string
+        example: "Doe"
+      phone_number:
+        type: string
+        example: "+998901234567"
 
 schemes:
  - https

@@ -1,23 +1,12 @@
-import { IsNotEmpty } from 'class-validator';
-import { Entity, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column } from 'typeorm';
 import { IAdmin } from '@/interfaces/admins.interface';
 import { BasePgEntity } from '../common/BaseEntity';
 
 @Entity('admins')
 export class AdminEntity extends BasePgEntity implements IAdmin {
-  @Column()
-  @IsNotEmpty()
+  @Column({ type: 'varchar' })
   username: string;
 
-  @Column()
-  @IsNotEmpty()
+  @Column({ type: 'varchar' })
   password: string;
-
-  @Column()
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @Column()
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

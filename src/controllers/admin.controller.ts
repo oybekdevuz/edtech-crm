@@ -10,7 +10,7 @@ export class AdminController {
     try {
       const findAllAdminsData: IAdmin[] = await this.user.findAllAdmin();
 
-      res.status(200).json({ data: findAllAdminsData, message: 'findAll' });
+      res.status(200).json({ data: findAllAdminsData, message: 'success' });
     } catch (error) {
       next(error);
     }
@@ -21,7 +21,7 @@ export class AdminController {
       const userId = req.params.id;
       const findOneAdminData: IAdmin = await this.user.findAdminById(userId);
 
-      res.status(200).json({ data: findOneAdminData, message: 'findOne' });
+      res.status(200).json({ data: findOneAdminData, message: 'success' });
     } catch (error) {
       next(error);
     }
@@ -33,7 +33,7 @@ export class AdminController {
       const userData: IAdmin = req.body;
       const updateAdminData: IAdmin = await this.user.updateAdmin(userId, userData);
 
-      res.status(200).json({ data: updateAdminData, message: 'updated' });
+      res.status(200).json({ data: updateAdminData, message: 'success' });
     } catch (error) {
       next(error);
     }
@@ -44,7 +44,7 @@ export class AdminController {
       const userId = req.params.id;
       const deleteAdminData: IAdmin = await this.user.deleteAdmin(userId);
 
-      res.status(200).json({ data: deleteAdminData, message: 'deleted' });
+      res.status(200).json({ data: deleteAdminData, message: 'success' });
     } catch (error) {
       next(error);
     }
