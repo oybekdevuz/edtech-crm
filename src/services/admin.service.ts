@@ -13,29 +13,21 @@ export class AdminService extends Repository<AdminEntity> {
     return users;
   }
 
-  public async findAdminById(userId: number): Promise<IAdmin> {
+  public async findAdminById(userId: string): Promise<IAdmin> {
     const findAdmin: IAdmin = await AdminEntity.findOne({ where: { id: userId } });
-    if (!findAdmin) throw new HttpException(409, "IAdmin doesn't exist");
+    if (!findAdmin) throw new HttpException(409, "Admin doesn't exist");
 
     return findAdmin;
   }
 
-  public async createAdmin(userData: IAdmin): Promise<IAdmin> {
-    const findAdmin: IAdmin = await AdminEntity.findOne({ where: { username: userData.username } });
-    if (findAdmin) throw new HttpException(409, `This username ${userData.username} already exists`);
-
-    const hashedPassword = await hash(userData.password, 10);
-    const createAdminData: IAdmin = await AdminEntity.create({ ...userData, password: hashedPassword }).save();
-
-    return createAdminData;
-  }
-
-  public async updateAdmin(userId: number, userData: IAdmin): Promise<IAdmin> {
+  public async updateAdmin(userId: string, userData: IAdmin): Promise<IAdmin> {
     const findAdmin: IAdmin = await AdminEntity.findOne({ where: { id: userId } });
-    if (!findAdmin) throw new HttpException(409, "IAdmin doesn't exist");
-
-    const hashedPassword = await hash(userData.password, 10);
-    await AdminEntity.update(userId, { ...userData, password: hashedPassword });
+    if (!findAdmin) throw new HttpException(409, "Admin doesn't exist");
+    if (userData.password) {
+      const hashedPassword = await hash(userData.password, 10);
+      userData.password = hashedPassword;
+    }
+    await AdminEntity.update(userId, userData);
 
     const updateAdmin: IAdmin = await AdminEntity.findOne({ where: { id: userId } });
     return updateAdmin;
@@ -43,7 +35,7 @@ export class AdminService extends Repository<AdminEntity> {
 
   public async deleteAdmin(userId: string): Promise<IAdmin> {
     const findAdmin: IAdmin = await AdminEntity.findOne({ where: { id: userId } });
-    if (!findAdmin) throw new HttpException(409, "IAdmin doesn't exist");
+    if (!findAdmin) throw new HttpException(409, "Admin doesn't exist");
 
     await AdminEntity.delete({ id: userId });
     return findAdmin;

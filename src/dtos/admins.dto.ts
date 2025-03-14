@@ -11,11 +11,3 @@ export class CreateAdminDto {
   @MaxLength(32)
   public password: string;
 }
-
-export class UpdateAdminDto {
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(9)
-  @MaxLength(32)
-  public password?: string;
-}

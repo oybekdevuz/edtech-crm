@@ -69,7 +69,20 @@ paths:
           description: 'Unauthorized'
         500:
           description: 'Server Error'
-  # ...existing auth paths...
+  /api/refresh-token:
+    post:
+      tags:
+      - auth
+      summary: refresh Admin token
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: 'OK'
+        401:
+          description: 'Unauthorized'
+        500:
+          description: 'Server Error'
 
   /api/admins:
     get:
@@ -136,7 +149,7 @@ paths:
         in: path
         description: Admin ID
         required: true
-        type: integer
+        type: string
       - name: body
         in: body
         description: Admin update data
@@ -171,7 +184,7 @@ paths:
         in: path
         description: Admin ID
         required: true
-        type: integer
+        type: string
       responses:
         200:
           description: 'OK'

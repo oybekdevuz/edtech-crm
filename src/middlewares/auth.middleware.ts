@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { verify } from 'jsonwebtoken';
-import { ACCESS_SECRET_KEY } from '@config';
 import { AdminEntity } from '@/entities/admins.entity';
 import { HttpException } from '@/exceptions/httpException';
 import { DataStoredInToken, RequestWithAdmin } from '@interfaces/auth.interface';
+import { JwtService } from '../utils/jwt-token';
 
 const getAuthorization = (req: Request) => {
   const coockie = req.cookies['Authorization'];
@@ -20,19 +19,20 @@ export const AuthMiddleware = async (req: RequestWithAdmin, res: Response, next:
     const Authorization = getAuthorization(req);
 
     if (Authorization) {
-      const { id } = (await verify(Authorization, ACCESS_SECRET_KEY)) as DataStoredInToken;
+      const jwtService = new JwtService();
+      const { id } = jwtService.validateAccessToken(Authorization) as DataStoredInToken;
       const findAdmin = await AdminEntity.findOne(id, { select: ['id', 'username', 'password'] });
 
       if (findAdmin) {
         req.user = findAdmin;
         next();
       } else {
-        next(new HttpException(401, 'Wrong authentication token'));
+        next(new HttpException(401, 'Unauthorized'));
       }
     } else {
-      next(new HttpException(404, 'Authentication token missing'));
+      next(new HttpException(404, 'Unauthorized'));
     }
   } catch (error) {
-    next(new HttpException(401, 'Wrong authentication token'));
+    next(new HttpException(401, 'Unauthorized'));
   }
 };

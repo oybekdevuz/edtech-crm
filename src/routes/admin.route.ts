@@ -16,8 +16,8 @@ export class AdminRoute implements Routes {
 
   private initializeRoutes() {
     this.router.get(`${this.path}`, AuthMiddleware, this.user.getAdmins);
-    this.router.get(`${this.path}/:id(\\d+)`, AuthMiddleware, this.user.getAdminById);
-    this.router.put(`${this.path}/:id(\\d+)`, AuthMiddleware, ValidationMiddleware(CreateAdminDto, true), this.user.updateAdmin);
-    this.router.delete(`${this.path}/:id(\\d+)`, AuthMiddleware, this.user.deleteAdmin);
+    this.router.get(`${this.path}/:id`, AuthMiddleware, this.user.getAdminById);
+    this.router.put(`${this.path}/:id`, AuthMiddleware, ValidationMiddleware(CreateAdminDto, true), this.user.updateAdmin);
+    this.router.delete(`${this.path}/:id`, AuthMiddleware, this.user.deleteAdmin);
   }
 }

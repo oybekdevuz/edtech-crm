@@ -30,6 +30,17 @@ export class AuthController {
     }
   };
 
+  public refreshTokenAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { cookie, tokens } = this.auth.refreshToken(req);
+
+      res.setHeader('Set-Cookie', [cookie]);
+      res.status(200).json({ data: { tokens }, message: 'refreshed token' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public logOutAdmin = async (req: RequestWithAdmin, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userData: IAdmin = req.user;

@@ -18,7 +18,7 @@ export class AdminController {
 
   public getAdminById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = Number(req.params.id);
+      const userId = req.params.id;
       const findOneAdminData: IAdmin = await this.user.findAdminById(userId);
 
       res.status(200).json({ data: findOneAdminData, message: 'findOne' });
@@ -29,7 +29,7 @@ export class AdminController {
 
   public updateAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = Number(req.params.id);
+      const userId = req.params.id;
       const userData: IAdmin = req.body;
       const updateAdminData: IAdmin = await this.user.updateAdmin(userId, userData);
 
