@@ -361,7 +361,160 @@ paths:
         500:
           description: 'Server Error'
 
+  /api/courses:
+    get:
+      tags:
+      - Courses
+      summary: Get all courses
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: 'Successfully retrieved courses'
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Course'
+              message:
+                type: string
+                example: "success"
+        401:
+          description: 'Unauthorized'
+        500:
+          description: 'Server Error'
 
+    post:
+      tags:
+      - Courses
+      summary: Create new course
+      security:
+        - cookieAuth: []
+      parameters:
+      - name: body
+        in: body
+        description: Course creation data
+        required: true
+        schema:
+          $ref: '#/definitions/CreateCourse'
+      responses:
+        201:
+          description: 'Course created successfully'
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Course'
+              message:
+                type: string
+                example: "success"
+        400:
+          description: 'Bad Request - Invalid input'
+        401:
+          description: 'Unauthorized'
+        500:
+          description: 'Server Error'
+
+  /api/courses/{id}:
+    get:
+      tags:
+      - Courses
+      summary: Get course by ID
+      security:
+        - cookieAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Course ID
+        required: true
+        type: string
+      responses:
+        200:
+          description: 'Successfully retrieved course'
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Course'
+              message:
+                type: string
+                example: "success"
+        401:
+          description: 'Unauthorized'
+        404:
+          description: 'Course not found'
+        500:
+          description: 'Server Error'
+
+    put:
+      tags:
+      - Courses
+      summary: Update course by ID
+      security:
+        - cookieAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Course ID
+        required: true
+        type: string
+      - name: body
+        in: body
+        description: Course update data
+        required: true
+        schema:
+          $ref: '#/definitions/CreateCourse'
+      responses:
+        200:
+          description: 'Course updated successfully'
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Course'
+              message:
+                type: string
+                example: "success"
+        400:
+          description: 'Bad Request - Invalid input'
+        401:
+          description: 'Unauthorized'
+        409:
+          description: "Course doesn't exist"
+        500:
+          description: 'Server Error'
+
+    delete:
+      tags:
+      - Courses
+      summary: Delete course by ID
+      security:
+        - cookieAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Course ID
+        required: true
+        type: string
+      responses:
+        200:
+          description: 'Course deleted successfully'
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Course'
+              message:
+                type: string
+                example: "success"
+        401:
+          description: 'Unauthorized'
+        409:
+          description: "Course doesn't exist"
+        500:
+          description: 'Server Error'
 
 
 securityDefinitions:
@@ -427,6 +580,71 @@ definitions:
       phone_number:
         type: string
         example: "+998901234567"
+  Course:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "123e4567-e89b-12d3-a456-426614174000"
+      course_name:
+        type: string
+        example: "Advanced JavaScript"
+      teacher_name:
+        type: string
+        example: "John Smith"
+      start_time:
+        type: integer
+        example: 1741919375491
+        description: "Course start timestamp in milliseconds"
+      start_hour:
+        type: string
+        example: "14:00"
+      weeks:
+        type: array
+        items:
+          type: string
+          enum: [mon, tue, wed, thu, fri, sat, sun]
+        example: ["mon", "fri"]
+
+      created_at:
+        type: integer
+        example: 1741919375491
+        description: "Timestamp in milliseconds since epoch"
+      updated_at:
+        type: integer
+        example: 1741919375491
+        description: "Timestamp in milliseconds since epoch"
+
+  CreateCourse:
+    type: object
+    required:
+      - course_name
+      - teacher_name
+      - start_time
+      - start_hour
+      - weeks
+    properties:
+      course_name:
+        type: string
+        example: "Advanced JavaScript"
+      teacher_name:
+        type: string
+        example: "John Smith"
+      start_time:
+        type: integer
+        example: 1741919375491
+      start_hour:
+        type: string
+        example: "14:00"
+      weeks:
+        type: array
+        items:
+          type: string
+          enum: [mon, tue, wed, thu, fri, sat, sun]
+        example: ["mon", "fri", "wed", "thu", "fri", "sat", "sun"]
+
+
 
 schemes:
  - https
