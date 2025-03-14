@@ -2,17 +2,19 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { CourseService } from '../services/course.service';
 import { ICourses } from '../interfaces/courses.interface';
-import { EnrollStudentDto } from '@/dtos/enroll-student.dto';
+import { CourseActionDto } from '@/dtos/enroll-student.dto';
 import { StudentCourseEntity } from '@/entities/studentCourses.entity';
+import { QueryDto } from '@/dtos/query.dto';
 
 export class CourseController {
   public user = Container.get(CourseService);
 
   public get = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const findAllCoursesData: ICourses[] = await this.user.findAll();
+      const dto: QueryDto = req.query as unknown as QueryDto;
+      const { data, total }: { data: ICourses[]; total: number } = await this.user.findAll(dto);
 
-      res.status(200).json({ data: findAllCoursesData, message: 'success' });
+      res.status(200).json({ data: data, total, message: 'success' });
     } catch (error) {
       next(error);
     }
@@ -53,8 +55,19 @@ export class CourseController {
 
   public enrollStudent = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const dto: EnrollStudentDto = req.body;
+      const dto: CourseActionDto = req.body;
       const updateCourseData: StudentCourseEntity = await this.user.enrollStudent(dto);
+
+      res.status(200).json({ data: updateCourseData, message: 'success' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public withdrawStudent = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const dto: CourseActionDto = req.body;
+      const updateCourseData: [] = await this.user.withdrawStudent(dto);
 
       res.status(200).json({ data: updateCourseData, message: 'success' });
     } catch (error) {

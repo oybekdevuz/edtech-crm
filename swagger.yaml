@@ -5,6 +5,8 @@ tags:
   description: Admin CRUD
 - name: Students
   description: Students CRUD
+- name: Course Registeration
+  description: Course Registeration
 
 paths:
   /api/signup:
@@ -211,6 +213,24 @@ paths:
       summary: Get all students
       security:
         - cookieAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          type: integer
+          default: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          type: integer
+          default: 10
+        - name: search
+          in: query
+          description: Search term for filtering students by name or phone number
+          required: false
+          type: string
       responses:
         200:
           description: 'Successfully retrieved students'
@@ -221,47 +241,17 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Student'
+              total:
+                type: integer
+                example: 100
+                description: Total number of records
               message:
                 type: string
-                example: "findAll"
+                example: "success"
         401:
           description: 'Unauthorized'
         500:
           description: 'Server Error'
-
-    post:
-      tags:
-      - Students
-      summary: Create new student
-      security:
-        - cookieAuth: []
-      parameters:
-      - name: body
-        in: body
-        description: Student creation data
-        required: true
-        schema:
-          $ref: '#/definitions/CreateStudent'
-      responses:
-        201:
-          description: 'Student created successfully'
-          schema:
-            type: object
-            properties:
-              data:
-                $ref: '#/definitions/Student'
-              message:
-                type: string
-                example: "created"
-        400:
-          description: 'Bad Request - Invalid input'
-        401:
-          description: 'Unauthorized'
-        409:
-          description: 'Conflict - Phone number already exists'
-        500:
-          description: 'Server Error'
-
   /api/students/{id}:
     get:
       tags:
@@ -368,6 +358,24 @@ paths:
       summary: Get all courses
       security:
         - cookieAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          type: integer
+          default: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          type: integer
+          default: 10
+        - name: search
+          in: query
+          description: Search term for filtering students by name or phone number
+          required: false
+          type: string
       responses:
         200:
           description: 'Successfully retrieved courses'
@@ -419,7 +427,7 @@ paths:
   /api/courses/enroll-student:
     post:
       tags:
-      - Courses
+      - Course Registeration
       summary: Register new student to course
       security:
         - cookieAuth: []
@@ -438,6 +446,38 @@ paths:
             properties:
               data:
                 $ref: '#/definitions/ResEnrollStudent'
+              message:
+                type: string
+                example: "success"
+        400:
+          description: 'Bad Request - Invalid input'
+        401:
+          description: 'Unauthorized'
+        500:
+          description: 'Server Error'
+  /api/courses/withdraw-student:
+    post:
+      tags:
+      - Course Registeration
+      summary: Remove student from course
+      security:
+        - cookieAuth: []
+      parameters:
+      - name: body
+        in: body
+        description: remove student data
+        required: true
+        schema:
+          $ref: '#/definitions/EnrollStudent'
+      responses:
+        201:
+          description: 'Course created successfully'
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                example: []
               message:
                 type: string
                 example: "success"

@@ -3,13 +3,27 @@ import { Service } from 'typedi';
 import { HttpException } from '@/exceptions/httpException';
 import { Istudent } from '../interfaces/students.interface';
 import { StudentEntity } from '../entities/students.entity';
+import { QueryDto } from '@/dtos/query.dto';
 
 @Service()
 @EntityRepository()
 export class StudentService extends Repository<StudentEntity> {
-  public async findAll(): Promise<Istudent[]> {
-    const students: Istudent[] = await StudentEntity.find();
-    return students;
+  public async findAll(dto: QueryDto): Promise<{ data: Istudent[]; total: number }> {
+    const { page = 1, page_size = 10, search } = dto;
+    const queryBuilder = StudentEntity.createQueryBuilder('student');
+    if (search) {
+      queryBuilder.where('(student.first_name ILIKE :search OR student.last_name ILIKE :search OR student.phone_number ILIKE :search)', {
+        search: `%${search}%`,
+      });
+    }
+    const skip = (page - 1) * page_size;
+    const total = await queryBuilder.getCount();
+    const students = await queryBuilder.skip(skip).take(page_size).orderBy('student.created_at', 'DESC').getMany();
+
+    return {
+      data: students,
+      total,
+    };
   }
 
   public async findById(userId: string): Promise<StudentEntity> {

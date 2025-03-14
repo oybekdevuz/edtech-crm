@@ -2,15 +2,17 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { StudentService } from '../services/student.service';
 import { Istudent } from '../interfaces/students.interface';
+import { QueryDto } from '@/dtos/query.dto';
 
 export class StudentController {
   public user = Container.get(StudentService);
 
   public get = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const findAllStudentsData: Istudent[] = await this.user.findAll();
+      const dto: QueryDto = req.query as unknown as QueryDto;
+      const { data, total }: { data: Istudent[]; total: number } = await this.user.findAll(dto);
 
-      res.status(200).json({ data: findAllStudentsData, message: 'success' });
+      res.status(200).json({ data: data, total, message: 'success' });
     } catch (error) {
       next(error);
     }

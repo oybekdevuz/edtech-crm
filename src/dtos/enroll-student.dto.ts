@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsUUID } from 'class-validator';
 
-export class EnrollStudentDto {
+export class CourseActionDto {
   @IsUUID()
   @IsNotEmpty()
   public student_id: string;
