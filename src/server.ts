@@ -1,10 +1,11 @@
 import { App } from '@/app';
-import { AuthRoute } from '@routes/auth.route';
+import { AuthRoute } from '@/routes/auth.route';
 import { AdminRoute } from '@/routes/admin.route';
-import { ValidateEnv } from '@utils/validateEnv';
+import { ValidateEnv } from './utils/validateEnv';
 import { StudentRoute } from './routes/student.route';
 import { CourseRoute } from './routes/course.route';
 import { StatisticsRoute } from './routes/statistics.route';
+import 'module-alias/register';
 
 ValidateEnv();
 

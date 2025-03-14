@@ -1,0 +1,121 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "lib": [
+            "es2017",
+            "es2018.asynciterable"
+        ],
+        "typeRoots": [
+            "C:/Users/TAD/Documents/GitHub/edtech-crm/node_modules/@types"
+        ],
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "node",
+        "module": "commonjs",
+        "sourceMap": true,
+        "declaration": true,
+        "outDir": "./dist",
+        "allowJs": true,
+        "noEmit": false,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "importHelpers": true,
+        "baseUrl": "./",
+        "paths": {
+            "@/*": [
+                "src/*"
+            ],
+            "@config": [
+                "config"
+            ],
+            "@controllers/*": [
+                "controllers/*"
+            ],
+            "@database": [
+                "database"
+            ],
+            "@dtos/*": [
+                "dtos/*"
+            ],
+            "@entities/*": [
+                "entities/*"
+            ],
+            "@exceptions/*": [
+                "exceptions/*"
+            ],
+            "@interfaces/*": [
+                "interfaces/*"
+            ],
+            "@middlewares/*": [
+                "middlewares/*"
+            ],
+            "@routes/*": [
+                "routes/*"
+            ],
+            "@services/*": [
+                "services/*"
+            ],
+            "@utils/*": [
+                "utils/*"
+            ]
+        }
+    },
+    "files": [
+        "./src/app.ts",
+        "./src/server.ts",
+        "./src/common/BaseEntity.ts",
+        "./src/config/index.ts",
+        "./src/controllers/admin.controller.ts",
+        "./src/controllers/auth.controller.ts",
+        "./src/controllers/course.controller.ts",
+        "./src/controllers/statistics.controller.ts",
+        "./src/controllers/student.controller.ts",
+        "./src/database/index.ts",
+        "./src/dtos/admins.dto.ts",
+        "./src/dtos/course.dto.ts",
+        "./src/dtos/enroll-student.dto.ts",
+        "./src/dtos/query.dto.ts",
+        "./src/dtos/students.dto.ts",
+        "./src/entities/admins.entity.ts",
+        "./src/entities/courses.entity.ts",
+        "./src/entities/studentCourses.entity.ts",
+        "./src/entities/students.entity.ts",
+        "./src/exceptions/HttpException.ts",
+        "./src/interfaces/admins.interface.ts",
+        "./src/interfaces/auth.interface.ts",
+        "./src/interfaces/courses.interface.ts",
+        "./src/interfaces/routes.interface.ts",
+        "./src/interfaces/studentCourses.interface.ts",
+        "./src/interfaces/students.interface.ts",
+        "./src/middlewares/auth.middleware.ts",
+        "./src/middlewares/error.middleware.ts",
+        "./src/middlewares/validation.middleware.ts",
+        "./src/routes/admin.route.ts",
+        "./src/routes/auth.route.ts",
+        "./src/routes/course.route.ts",
+        "./src/routes/statistics.route.ts",
+        "./src/routes/student.route.ts",
+        "./src/services/admin.service.ts",
+        "./src/services/auth.service.ts",
+        "./src/services/course.service.ts",
+        "./src/services/statistics.service.ts",
+        "./src/services/student.service.ts",
+        "./src/test/auth.test.ts",
+        "./src/test/users.test.ts",
+        "./src/utils/jwt-token.ts",
+        "./src/utils/logger.ts",
+        "./src/utils/validateEnv.ts"
+    ],
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.json",
+        ".env"
+    ],
+    "exclude": [
+        "node_modules",
+        "src/http",
+        "src/logs"
+    ]
+}

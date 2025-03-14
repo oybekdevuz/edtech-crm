@@ -7,7 +7,7 @@
   "scripts": {
     "start": "npm run build && cross-env NODE_ENV=production node dist/server.js",
     "dev": "cross-env NODE_ENV=development nodemon",
-    "build": "swc src -d dist --source-maps --copy-files",
+    "build": "tsc && tsc-alias",
     "build:tsc": "tsc && tsc-alias",
     "test": "jest --forceExit --detectOpenHandles",
     "lint": "eslint --ignore-path .gitignore --ext .ts src/",
@@ -15,6 +15,20 @@
     "deploy:prod": "npm run build && pm2 start ecosystem.config.js --only prod",
     "deploy:dev": "pm2 start ecosystem.config.js --only dev"
   },
+    "_moduleAliases": {
+      "@": "dist",
+      "@config": "dist/config",
+      "@controllers": "dist/controllers",
+      "@database": "dist/database",
+      "@dtos": "dist/dtos",
+      "@entities": "dist/entities",
+      "@exceptions": "dist/exceptions",
+      "@interfaces": "dist/interfaces",
+      "@middlewares": "dist/middlewares",
+      "@routes": "dist/routes",
+      "@services": "dist/services",
+      "@utils": "dist/utils"
+    },
   "dependencies": {
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
@@ -28,13 +42,14 @@
     "helmet": "^5.1.1",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.3",
     "morgan": "^1.10.0",
     "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.5.0",
-    "typeorm": "^0.2.45",
     "typedi": "^0.10.0",
+    "typeorm": "^0.2.45",
     "winston": "^3.8.1",
     "winston-daily-rotate-file": "^4.7.1"
   },
