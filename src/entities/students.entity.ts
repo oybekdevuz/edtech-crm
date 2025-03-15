@@ -14,6 +14,6 @@ export class StudentEntity extends BasePgEntity implements Istudent {
   @Column({ type: 'varchar' })
   phone_number: string;
 
-  @OneToMany(() => StudentCourseEntity, studentCourse => studentCourse.student)
-  public studentCourses: StudentCourseEntity[];
+  @OneToMany(() => StudentCourseEntity, (studentCourse: StudentCourseEntity) => studentCourse.student, { lazy: true })
+  studentCourses: Promise<StudentCourseEntity[]>;
 }

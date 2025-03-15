@@ -6,11 +6,11 @@ import { CourseEntity } from './courses.entity';
 
 @Entity('student_courses')
 export class StudentCourseEntity extends BasePgEntity implements IStudentCourses {
-  @ManyToOne(() => StudentEntity, student => student.studentCourses, { onDelete: 'CASCADE' })
+  @ManyToOne(() => StudentEntity, (student: StudentEntity) => student.studentCourses, { lazy: true })
   @JoinColumn({ name: 'student_id' })
-  public student: StudentEntity;
+  student: Promise<StudentEntity>;
 
-  @ManyToOne(() => CourseEntity, course => course.studentCourses, { onDelete: 'CASCADE' })
+  @ManyToOne(() => CourseEntity, (course: CourseEntity) => course.studentCourses, { lazy: true })
   @JoinColumn({ name: 'course_id' })
-  public course: CourseEntity;
+  course: Promise<CourseEntity>;
 }
